@@ -13,6 +13,9 @@ export default function Header() {
                 <Link href="/privacy" style={styles.link}>
                     Privacy Policy
                 </Link>
+                <Link href="/users" style={styles.link}>
+                    Users
+                </Link>
                 <Link href="/cart" style={styles.link}>
                     Cart
                 </Link>
