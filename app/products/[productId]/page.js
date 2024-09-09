@@ -1,12 +1,30 @@
+"use client"
+
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
+import { useCart } from '@/context/CartContext';
 
 export default async function ProductPage({ params }) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${params.productId}`);
-  if (!res.ok) {
-    notFound();
+  const [product, setProduct] = useState({});
+  const { addToCart } = useCart();
+  // console.log("process.env.NEXT_PUBLIC_API_URL",`${process.env.NEXT_PUBLIC_API_URL}/api/products/${params.productId}`)
+
+  useEffect(() => {
+    async function fetchProduct() {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${params.productId}`);
+      if (!res.ok) {
+        notFound();
+      }
+      const data = await res.json();
+      setProduct(data);
+    }
+    fetchProduct();
+  }, [params]);
+
+  const handleAddToCart = (product) => {
+    addToCart(product)
   }
-  const product = await res.json();
 
   return (
     <div className="container mx-auto p-6">
@@ -14,8 +32,8 @@ export default async function ProductPage({ params }) {
         {/* Product Image Gallery */}
         <div className="flex flex-col space-y-4">
           <Image
-            src={product.thumbnail}
-            alt={product.title}
+            src={product?.thumbnail}
+            alt={product?.title}
             className="w-full h-96 object-cover rounded-lg shadow-md"
             width={0}
             height={0}
@@ -24,7 +42,7 @@ export default async function ProductPage({ params }) {
           <div className="grid grid-cols-3 gap-2">
             {/* Placeholder for additional images */}
             <Image
-              src={product.thumbnail}
+              src={product?.thumbnail}
               alt="Gallery Image"
               className="w-full h-24 object-cover rounded-md shadow-sm"
               width={0}
@@ -32,7 +50,7 @@ export default async function ProductPage({ params }) {
               sizes='100vw'
             />
             <Image
-              src={product.thumbnail}
+              src={product?.thumbnail}
               alt="Gallery Image"
               className="w-full h-24 object-cover rounded-md shadow-sm"
               width={0}
@@ -40,7 +58,7 @@ export default async function ProductPage({ params }) {
               sizes='100vw'
             />
             <Image
-              src={product.thumbnail}
+              src={product?.thumbnail}
               alt="Gallery Image"
               className="w-full h-24 object-cover rounded-md shadow-sm"
               width={0}
@@ -65,12 +83,12 @@ export default async function ProductPage({ params }) {
           </div>
 
           <div className="flex items-center space-x-4 mt-6">
-            <button className="bg-blue-600 text-white text-lg font-semibold py-3 px-6 rounded-md shadow-md hover:bg-blue-700 transition-colors">
+            <button className="bg-blue-600 text-white text-lg font-semibold py-3 px-6 rounded-md shadow-md hover:bg-blue-700 transition-colors" onClick={() => handleAddToCart(product)}>
               Add to Cart
             </button>
-            <button className="border border-blue-600 text-blue-600 text-lg font-semibold py-3 px-6 rounded-md shadow-md hover:bg-blue-600 hover:text-white transition-colors">
+            {/* <button className="border border-blue-600 text-blue-600 text-lg font-semibold py-3 px-6 rounded-md shadow-md hover:bg-blue-600 hover:text-white transition-colors">
               Buy Now
-            </button>
+            </button> */}
           </div>
 
           <div className="mt-8">

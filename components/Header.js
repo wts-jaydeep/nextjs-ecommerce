@@ -1,6 +1,11 @@
+"use client"
+
+import { useCart } from '@/context/CartContext';
 import Link from 'next/link';
 
 export default function Header() {
+    const { cartCount } = useCart();
+
     return (
         <header style={styles.header}>
             <nav style={styles.nav}>
@@ -13,11 +18,11 @@ export default function Header() {
                 <Link href="/privacy" style={styles.link}>
                     Privacy Policy
                 </Link>
-                <Link href="/users" style={styles.link}>
+                {/* <Link href="/users" style={styles.link}>
                     Users
-                </Link>
+                </Link> */}
                 <Link href="/cart" style={styles.link}>
-                    Cart
+                    Cart ({cartCount})
                 </Link>
             </nav>
         </header>
